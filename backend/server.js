@@ -18,44 +18,43 @@ app.use(cors());
 
 // Get questions
 app.get("/questions", async (req, res) => {
-  const { id, title } = req.query;
-
-  if (req.headers["method"] == "id") {
-    try {
-      const question = await prisma.questions.findMany({
-        where: { id },
-        take: 20,
-        orderBy: { id: "desc" },
-      });
-      if (!question) {
-        return res.status(404).json({ error: "Question not found" });
-      }
-      res.json(question);
-    } catch (error) {
-      console.error("Error fetching question:", error);
-      res.status(500).json({ error: "Failed to fetch question" });
-    }
-  }
+  const { title, page = 1 } = req.query;
+  const pageSize = 20;
+  const skip = (Number(page) - 1) * pageSize;
 
   if (req.headers["method"] == "title") {
     try {
-      const question = await prisma.questions.findMany({
-        where: {
-          title: {
-            contains: title,
-            mode: "insensitive",
+      const [questions, total] = await Promise.all([
+        prisma.questions.findMany({
+          where: {
+            title: {
+              contains: title,
+              mode: "insensitive",
+            },
           },
-        },
-        take: 100,
-        orderBy: { id: "desc" },
+          skip,
+          take: pageSize,
+          // orderBy: { id: "desc" },
+        }),
+        prisma.questions.count({
+          where: {
+            title: {
+              contains: title,
+              mode: "insensitive",
+            },
+          },
+        }),
+      ]);
+
+      res.json({
+        items: questions,
+        total,
+        currentPage: Number(page),
+        totalPages: Math.ceil(total / pageSize),
       });
-      if (!question) {
-        return res.status(404).json({ error: "Question not found" });
-      }
-      res.json(question);
     } catch (error) {
-      console.error("Error fetching question:", error);
-      res.status(500).json({ error: "Failed to fetch question" });
+      console.error("Error fetching questions:", error);
+      res.status(500).json({ error: "Failed to fetch questions" });
     }
   }
 });
