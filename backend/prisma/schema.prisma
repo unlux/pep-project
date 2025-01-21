@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type QuestionsBlocks {
+  isAnswer     Boolean
+  showInOption Boolean
+  text         String
+}
+
+type QuestionsOptions {
+  isCorrectAnswer Boolean
+  text            String
+}
+
+model Questions {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  anagramType String?
+  blocks      QuestionsBlocks[]
+  options     QuestionsOptions[]
+  siblingId   String?            @db.ObjectId
+  solution    String?
+  title       String
+  type        String
+}
