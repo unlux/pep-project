@@ -3,7 +3,7 @@ import QuestionSearch from "./components/QuestionSearch";
 
 function App() {
   return (
-    <div className="w-screen h-screen">
+    <div className="max-w-screen-lg w-screen min-h-screen flex items-center justify-center">
       <QuestionSearch />
     </div>
   );
