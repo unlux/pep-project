@@ -10,18 +10,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
-interface IBlock {
-  text: string;
-  showInOption: boolean;
+interface QuestionsBlocks {
   isAnswer: boolean;
+  showInOption: boolean;
+  text: string;
+}
+
+interface QuestionsOptions {
+  isCorrectAnswer: boolean;
+  text: string;
 }
 
 interface IQuestion {
-  _id: string;
-  type: "ANAGRAM" | "CONTENT_ONLY" | "READ_ALONG" | "MCQ";
+  id: string;
+  type: string;
   anagramType?: string;
-  blocks?: IBlock[];
+  blocks?: QuestionsBlocks[];
+  options?: QuestionsOptions[];
   siblingId?: string;
   solution?: string;
   title: string;
@@ -39,10 +46,14 @@ const QuestionSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [jumpPage, setJumpPage] = useState(""); // Add state for jump input
+  const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(
+    new Set()
+  );
 
   const fetchQuestions = async (query: string, page: number) => {
     if (!query.trim()) {
@@ -97,9 +108,21 @@ const QuestionSearch = () => {
       }
     }
   };
+  // toggle fn
+  const toggleQuestion = (id: string) => {
+    setExpandedQuestions((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   return (
-    <div className="p-4 space-y-4 dark:bg-gray-900">
+    <div className=" w-full h-max p-3 dark:bg-gray-900">
       <Card className="w-full dark:bg-gray-800">
         <CardHeader>
           <CardTitle className="dark:text-white">
@@ -187,16 +210,49 @@ const QuestionSearch = () => {
               </div>
             ) : questions.length > 0 ? (
               questions.map((question) => (
-                <Card key={question._id} className="dark:bg-gray-700">
+                <Card key={question.id} className="dark:bg-gray-700">
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-medium dark:text-white">
-                          Title: {question.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground dark:text-gray-300">
-                          Type: {question.type}
-                        </p>
+                      <div className="w-full">
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-medium dark:text-white">
+                            Title: {question.title}
+                          </h3>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-muted-foreground dark:text-gray-300">
+                              Type: {question.type}
+                            </p>
+                            {question.type.toUpperCase() === "MCQ" && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => toggleQuestion(question.id)}
+                                className="dark:text-gray-300 hover:dark:bg-gray-600"
+                              >
+                                {expandedQuestions.has(question.id) ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Options dropdown */}
+                        {question.type.toUpperCase() === "MCQ" &&
+                          expandedQuestions.has(question.id) && (
+                            <div className="mt-4 pl-4 space-y-2 border-l-2 border-gray-600">
+                              {question.options?.map((option, index) => (
+                                <p
+                                  key={index}
+                                  className="text-sm dark:text-gray-300"
+                                >
+                                  {option.text}
+                                </p>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </CardContent>
