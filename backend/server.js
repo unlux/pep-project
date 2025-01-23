@@ -18,44 +18,42 @@ app.use(cors());
 
 // Get questions
 app.get("/questions", async (req, res) => {
-  const { title, page = 1 } = req.query;
+  const { title, page = 1, type } = req.query;
   const pageSize = 20;
   const skip = (Number(page) - 1) * pageSize;
 
-  if (req.headers["method"] == "title") {
-    try {
-      const [questions, total] = await Promise.all([
-        prisma.questions.findMany({
-          where: {
-            title: {
-              contains: title,
-              mode: "insensitive",
-            },
-          },
-          skip,
-          take: pageSize,
-          // orderBy: { id: "desc" },
-        }),
-        prisma.questions.count({
-          where: {
-            title: {
-              contains: title,
-              mode: "insensitive",
-            },
-          },
-        }),
-      ]);
+  try {
+    const whereClause = {
+      title: {
+        contains: title,
+        mode: "insensitive",
+      },
+    };
 
-      res.json({
-        items: questions,
-        total,
-        currentPage: Number(page),
-        totalPages: Math.ceil(total / pageSize),
-      });
-    } catch (error) {
-      console.error("Error fetching questions:", error);
-      res.status(500).json({ error: "Failed to fetch questions" });
+    if (type && type !== "ALL") {
+      whereClause.type = { equals: type };
     }
+
+    const [questions, total] = await Promise.all([
+      prisma.questions.findMany({
+        where: whereClause,
+        skip,
+        take: pageSize,
+      }),
+      prisma.questions.count({
+        where: whereClause,
+      }),
+    ]);
+
+    res.json({
+      items: questions,
+      total,
+      currentPage: Number(page),
+      totalPages: Math.ceil(total / pageSize),
+    });
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    res.status(500).json({ error: "Failed to fetch questions" });
   }
 });
 

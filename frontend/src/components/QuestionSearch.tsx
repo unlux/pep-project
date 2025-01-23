@@ -1,13 +1,16 @@
 import PaginationControls from "@/components/PaginationControls";
-import MCQDropDown from "@/components/MCQDropDown";
+import TypeFilterPopover from "@/components/TypeFilterPopover";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IQuestion, PaginatedResponse } from "@/interfaces/interfaces";
+import QuestionTypeDisplay from "./QuestionTypeDisplay";
+
+const PAGE_SIZE = 20;
 
 const QuestionSearch = () => {
-  //variables
+  // State variables
   const [searchQuery, setSearchQuery] = useState("");
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,12 +18,13 @@ const QuestionSearch = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [jumpPage, setJumpPage] = useState(""); // Add state for jump input
-  const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(
-    new Set()
-  );
+  const [selectedType, setSelectedType] = useState("ALL");
 
-  const fetchQuestions = async (query: string, page: number) => {
+  const fetchQuestions = async (
+    query: string,
+    page: number,
+    typeFilter: string
+  ) => {
     if (!query.trim()) {
       setQuestions([]);
       return;
@@ -40,6 +44,8 @@ const QuestionSearch = () => {
           params: {
             title: query.trim(),
             page,
+            // If typeFilter is "ALL", skip sending it
+            ...(typeFilter !== "ALL" && { type: typeFilter }),
           },
         }
       );
@@ -57,34 +63,48 @@ const QuestionSearch = () => {
   // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchQuestions(searchQuery, currentPage);
+      fetchQuestions(searchQuery, currentPage, selectedType);
     }, 300);
-
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, currentPage]);
+  }, [searchQuery, currentPage, selectedType]);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 p-4 md:p-6">
       <Card className="container mx-auto max-w-5xl h-[calc(100vh-3rem)] dark:bg-gray-800/50 backdrop-blur border-gray-200 dark:border-gray-700 shadow-xl">
         <CardHeader className="border-b border-gray-200 dark:border-gray-700/50">
           <CardTitle className="dark:text-white text-center space-y-6">
-            <div className="relative max-w-2xl mx-auto">
+            {/* Search and Filter */}
+            <div className="relative max-w-2xl mx-auto flex  items-center gap-4">
               <Input
                 placeholder="Search questions..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                  setQuestions([]);
+                }}
                 className="w-full h-12 pl-8 pr-4 rounded-xl shadow-sm 
                   dark:bg-gray-700/50 dark:text-white dark:border-gray-600
                   focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500
                   transition-all duration-200"
               />
+
+              {/* Type Filter Popover */}
+              <TypeFilterPopover
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
+                setCurrentPage={setCurrentPage}
+              />
             </div>
 
+            {/* Pagination controls */}
             {questions.length > 0 && (
               <PaginationControls
                 currentPage={currentPage}
                 totalPages={totalPages}
                 setCurrentPage={setCurrentPage}
+                questions={questions}
+                setQuestions={setQuestions}
               />
             )}
           </CardTitle>
@@ -97,21 +117,24 @@ const QuestionSearch = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-400 dark:border-gray-300"></div>
               </div>
             ) : questions.length > 0 ? (
-              questions.map((question) => (
-                <Card
-                  key={question.id}
-                  className="dark:bg-gray-700/50 backdrop-blur transition-all duration-200 hover:shadow-md"
-                >
-                  <CardContent className="p-4 flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium text-lg dark:text-white">
-                        TITLE: {question.title}
-                      </h3>
-                      <MCQDropDown question={question} />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+              questions.map((question, index) => {
+                const globalIndex = (currentPage - 1) * PAGE_SIZE + index + 1;
+                return (
+                  <Card
+                    key={question.id}
+                    className="dark:bg-gray-700/50 backdrop-blur transition-all duration-200 hover:shadow-md"
+                  >
+                    <CardContent className="p-4 flex flex-col gap-2">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-medium text-lg dark:text-white">
+                          {globalIndex}: {question.title}
+                        </h3>
+                        <QuestionTypeDisplay question={question} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
             ) : (
               <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                 {searchQuery !== "ALL"

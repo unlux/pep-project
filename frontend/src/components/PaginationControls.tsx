@@ -8,17 +8,20 @@ import {
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { IQuestion } from "@/interfaces/interfaces";
 
 interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
   setCurrentPage: (page: number) => void;
+  setQuestions: (questions: IQuestion[]) => void;
 }
 
 const PaginationControls: FC<PaginationControlsProps> = ({
   currentPage,
   totalPages,
   setCurrentPage,
+  setQuestions,
 }) => {
   const [jumpPage, setJumpPage] = useState("");
 
@@ -51,9 +54,10 @@ const PaginationControls: FC<PaginationControlsProps> = ({
 
         <PaginationItem>
           <PaginationNext
-            onClick={() =>
-              setCurrentPage(Math.min(totalPages, currentPage + 1))
-            }
+            onClick={() => {
+              setCurrentPage(Math.min(totalPages, currentPage + 1));
+              setQuestions([]);
+            }}
             className="cursor-pointer dark:text-gray-300"
             disabled={currentPage === totalPages}
           />
