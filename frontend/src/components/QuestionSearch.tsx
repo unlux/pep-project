@@ -10,7 +10,6 @@ import QuestionTypeDisplay from "./QuestionTypeDisplay";
 const PAGE_SIZE = 20;
 
 const QuestionSearch = () => {
-  // State variables
   const [searchQuery, setSearchQuery] = useState("");
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +73,7 @@ const QuestionSearch = () => {
         <CardHeader className="border-b border-gray-200 dark:border-gray-700/50">
           <CardTitle className="dark:text-white text-center space-y-6">
             {/* Search and Filter */}
-            <div className="relative max-w-2xl mx-auto flex  items-center gap-4">
+            <div className="relative max-w-2xl mx-auto flex items-center gap-4">
               <Input
                 placeholder="Search questions..."
                 value={searchQuery}
@@ -83,7 +82,7 @@ const QuestionSearch = () => {
                   setCurrentPage(1);
                   setQuestions([]);
                 }}
-                className="w-full h-12 pl-8 pr-4 rounded-xl shadow-sm 
+                className="w-full h-12 rounded-xl shadow-sm 
                   dark:bg-gray-700/50 dark:text-white dark:border-gray-600
                   focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500
                   transition-all duration-200"
@@ -103,7 +102,6 @@ const QuestionSearch = () => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 setCurrentPage={setCurrentPage}
-                questions={questions}
                 setQuestions={setQuestions}
               />
             )}

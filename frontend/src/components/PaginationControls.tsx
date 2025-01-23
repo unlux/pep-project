@@ -31,6 +31,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
       if (page >= 1 && page <= totalPages) {
         setCurrentPage(page);
         setJumpPage("");
+        setQuestions([]);
       }
     }
   };
