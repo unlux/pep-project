@@ -9,13 +9,17 @@ const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// CORS Middleware (Fixed)
 app.use(
   cors({
-    origin: ["*"], // Allow frontend origins
+    origin: "*", // Change this to your frontend URL for security
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "method", "username"],
     optionsSuccessStatus: 200,
   })
 );
+app.options("*", cors()); // Handle preflight requests
+
 app.use(express.json());
 app.use(checkUsername);
 app.use(morgan("dev"));
@@ -61,6 +65,7 @@ app.get("/questions", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Ensure server listens properly on Render
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server is running on port ${port}`);
 });
