@@ -1,11 +1,16 @@
 import "./App.css";
-import QuestionSearch from "./components/QuestionSearch";
+// import QuestionSearch from "./components/QuestionSearch";
+import { Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
-    <div className="max-w-screen-lg w-screen min-h-screen flex items-center justify-center">
-      <QuestionSearch />
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/search" element={<SearchPage />} />
+    </Routes>
+    // <QuestionSearch />
   );
 }
 
