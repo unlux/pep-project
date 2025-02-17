@@ -31,7 +31,7 @@ const TypeFilterPopover: FC<TypeFilterPopoverProps> = ({
         {questionTypes.map((type) => (
           <Button
             key={type}
-            variant={selectedType === type ? "solid" : "ghost"} // Changed variant to "solid"
+            variant={selectedType === type ? "default" : "ghost"} // Changed variant to "solid"
             onClick={() => {
               setSelectedType(type);
               setCurrentPage(1); // Reset to first page on filter change

@@ -43,7 +43,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
           <PaginationPrevious
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             className="cursor-pointer dark:text-gray-300"
-            disabled={currentPage === 1}
+            aria-disabled={currentPage === 1}
           />
         </PaginationItem>
 
@@ -60,7 +60,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
               setQuestions([]);
             }}
             className="cursor-pointer dark:text-gray-300"
-            disabled={currentPage === totalPages}
+            aria-disabled={currentPage === totalPages}
           />
         </PaginationItem>
 

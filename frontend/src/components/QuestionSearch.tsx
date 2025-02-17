@@ -34,7 +34,7 @@ const QuestionSearch = () => {
       setError(null);
 
       const response = await axios.get<PaginatedResponse>(
-        "https://pep-project.onrender.com/questions",
+        "https://pep-project.onrender.com:3000/questions",
         {
           headers: {
             method: "title",
@@ -54,6 +54,7 @@ const QuestionSearch = () => {
       setCurrentPage(response.data.currentPage);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

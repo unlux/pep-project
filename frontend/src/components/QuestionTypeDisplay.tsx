@@ -7,7 +7,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { IQuestion } from "@/interfaces/interfaces";
-import { Separator } from "./ui/separator";
 
 const QuestionTypeDisplay: FC<{ question: IQuestion }> = ({ question }) => {
   if (question.type.toUpperCase() === "MCQ" && question.options?.length) {
