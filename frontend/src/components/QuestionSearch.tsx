@@ -34,7 +34,7 @@ const QuestionSearch = () => {
       setError(null);
 
       const response = await axios.get<PaginatedResponse>(
-        "https://pep-project.onrender.com:3000/questions",
+        "https://pep-project.onrender.com/questions",
         {
           headers: {
             method: "title",

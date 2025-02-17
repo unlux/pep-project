@@ -14,7 +14,12 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(checkUsername);
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    optionsSuccessStatus: 200,
+  })
+);
 
 // Get questions
 app.get("/questions", async (req, res) => {
