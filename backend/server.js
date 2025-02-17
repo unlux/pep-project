@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
@@ -11,15 +10,15 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(bodyParser.json());
-app.use(checkUsername);
-app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "*",
+    origin: ["*"], // Allow frontend origins
     optionsSuccessStatus: 200,
   })
 );
+app.use(express.json());
+app.use(checkUsername);
+app.use(morgan("dev"));
 
 // Get questions
 app.get("/questions", async (req, res) => {
