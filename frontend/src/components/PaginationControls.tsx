@@ -55,10 +55,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
 
         <PaginationItem>
           <PaginationNext
-            onClick={() => {
-              setCurrentPage(Math.min(totalPages, currentPage + 1));
-              setQuestions([]);
-            }}
+            onClick={() => setCurrentPage(Math.max(1, currentPage + 1))}
             className="h-9 cursor-pointer dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors flex items-center"
             aria-disabled={currentPage === totalPages}
           />

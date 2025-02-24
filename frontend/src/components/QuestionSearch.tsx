@@ -17,6 +17,7 @@ const QuestionSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedType, setSelectedType] = useState("ALL");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   const fetchQuestions = async (
     query: string,
@@ -61,10 +62,16 @@ const QuestionSearch = () => {
   // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchQuestions(searchQuery, currentPage, selectedType);
+      setDebouncedQuery(searchQuery);
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, currentPage, selectedType]);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      fetchQuestions(debouncedQuery, currentPage, selectedType);
+    }
+  }, [debouncedQuery, currentPage, selectedType]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 p-4 md:p-6">
@@ -136,11 +143,13 @@ const QuestionSearch = () => {
                 );
               })
             ) : (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                {searchQuery !== "ALL"
-                  ? "No questions found"
-                  : "Start typing to search questions"}
-              </div>
+              !isLoading && (
+                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                  {debouncedQuery
+                    ? "No questions found"
+                    : "Start typing to search questions"}
+                </div>
+              )
             )}
           </div>
         </CardContent>
