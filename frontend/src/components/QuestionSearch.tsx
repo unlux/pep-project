@@ -67,12 +67,12 @@ const QuestionSearch = () => {
   }, [searchQuery, currentPage, selectedType]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 p-4 md:p-6">
-      <Card className="container mx-auto max-w-5xl h-[calc(100vh-3rem)] dark:bg-gray-800/50 backdrop-blur border-gray-200 dark:border-gray-700 shadow-xl">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 p-4 md:p-6">
+      <Card className="container mx-auto h-[calc(100vh-3rem)] dark:bg-gray-800/50 backdrop-blur border-gray-200 dark:border-gray-700 shadow-xl">
         <CardHeader className="border-b border-gray-200 dark:border-gray-700/50">
           <CardTitle className="dark:text-white text-center space-y-6">
             {/* Search and Filter */}
-            <div className="relative max-w-2xl mx-auto flex items-center gap-4">
+            <div className="relative mx-auto flex items-center gap-4">
               <Input
                 placeholder="Search questions..."
                 value={searchQuery}
@@ -81,7 +81,7 @@ const QuestionSearch = () => {
                   setCurrentPage(1);
                   setQuestions([]);
                 }}
-                className="w-full h-12 rounded-xl shadow-sm 
+                className="w-full h-12 rounded-xl shadow-sm
                   dark:bg-gray-700/50 dark:text-white dark:border-gray-600
                   focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500
                   transition-all duration-200"
@@ -108,7 +108,7 @@ const QuestionSearch = () => {
         </CardHeader>
 
         <CardContent className="overflow-auto h-[calc(100%-12rem)] py-6">
-          <div className="space-y-4 max-w-4xl mx-auto">
+          <div className="space-y-4  mx-auto">
             {isLoading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-400 dark:border-gray-300"></div>
@@ -123,8 +123,11 @@ const QuestionSearch = () => {
                   >
                     <CardContent className="p-4 flex flex-col gap-2">
                       <div className="flex justify-between items-center">
-                        <h3 className="font-medium text-lg dark:text-white">
-                          {globalIndex}: {question.title}
+                        <h3 className="font-medium text-lg dark:text-white flex items-center gap-2">
+                          <span className="px-2 py-0.5 text-sm rounded-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                            {globalIndex}
+                          </span>
+                          {question.title}
                         </h3>
                         <QuestionTypeDisplay question={question} />
                       </div>

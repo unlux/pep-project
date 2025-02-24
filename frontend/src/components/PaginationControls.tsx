@@ -38,18 +38,18 @@ const PaginationControls: FC<PaginationControlsProps> = ({
 
   return (
     <Pagination>
-      <PaginationContent className="gap-2">
+      <PaginationContent className="flex items-center justify-center gap-4">
         <PaginationItem>
           <PaginationPrevious
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            className="cursor-pointer dark:text-gray-300"
+            className="h-9 cursor-pointer dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors flex items-center"
             aria-disabled={currentPage === 1}
           />
         </PaginationItem>
 
         <PaginationItem>
-          <span className="px-4 py-2 text-lg dark:text-gray-300">
-            Page {currentPage} of {totalPages}
+          <span className="h-9 px-4 inline-flex items-center text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300">
+            {currentPage} / {totalPages}
           </span>
         </PaginationItem>
 
@@ -59,19 +59,19 @@ const PaginationControls: FC<PaginationControlsProps> = ({
               setCurrentPage(Math.min(totalPages, currentPage + 1));
               setQuestions([]);
             }}
-            className="cursor-pointer dark:text-gray-300"
+            className="h-9 cursor-pointer dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors flex items-center"
             aria-disabled={currentPage === totalPages}
           />
         </PaginationItem>
 
-        <PaginationItem className="flex">
+        <PaginationItem className="flex items-center gap-2">
           <Input
             type="number"
             value={jumpPage}
             onChange={(e) => setJumpPage(e.target.value)}
             onKeyDown={handleJump}
-            placeholder="Jump to..."
-            className="w-24 h-8 text-center dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            placeholder="Jump"
+            className="w-20 h-9 text-center rounded-lg dark:bg-gray-700/50 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 transition-all"
             min={1}
             max={totalPages}
           />
@@ -83,7 +83,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
                 setJumpPage("");
               }
             }}
-            className="h-8 px-2 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+            className="h-9 px-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700/50 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600/50 transition-colors"
             variant="outline"
             size="sm"
           >

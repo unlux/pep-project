@@ -23,10 +23,11 @@ const QuestionTypeDisplay: FC<{ question: IQuestion }> = ({ question }) => {
         </PopoverTrigger>
         <PopoverContent className="w-72 p-4 dark:bg-gray-800 dark:border-gray-700/50">
           {question.options.map((option, index) => (
-            <div key={index} className="mb-2 last:mb-0">
-              <p className="text-sm dark:text-gray-300">
-                {index}: {option.text}
-              </p>
+            <div key={index} className="mb-2 last:mb-0 flex items-center gap-2">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                {index}
+              </span>
+              <p className="text-sm dark:text-gray-300">{option.text}</p>
             </div>
           ))}
         </PopoverContent>
@@ -47,10 +48,11 @@ const QuestionTypeDisplay: FC<{ question: IQuestion }> = ({ question }) => {
         </PopoverTrigger>
         <PopoverContent className="p-4 w-60 dark:bg-gray-800 dark:border-gray-700 flex flex-col gap-2">
           {question.blocks.map((block, index) => (
-            <div key={index} className="mb-2 last:mb-0">
-              <p className="text-sm dark:text-gray-300">
-                {index}: {block.text}
-              </p>
+            <div key={index} className="mb-2 last:mb-0 flex items-center gap-2">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                {index}
+              </span>
+              <p className="text-sm dark:text-gray-300">{block.text}</p>
             </div>
           ))}
         </PopoverContent>
