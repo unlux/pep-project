@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IQuestion, PaginatedResponse } from "@/interfaces/interfaces";
 import QuestionTypeDisplay from "./QuestionTypeDisplay";
+import Example from "./Example";
 
 const PAGE_SIZE = 20;
 
@@ -144,10 +145,16 @@ const QuestionSearch = () => {
               })
             ) : (
               !isLoading && (
-                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                  {debouncedQuery
-                    ? "No questions found"
-                    : "Start typing to search questions"}
+                <div className="text-center py-12">
+                  {debouncedQuery ? (
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No questions found
+                    </p>
+                  ) : (
+                    <div className="max-w-2xl mx-auto">
+                      <Example />
+                    </div>
+                  )}
                 </div>
               )
             )}
